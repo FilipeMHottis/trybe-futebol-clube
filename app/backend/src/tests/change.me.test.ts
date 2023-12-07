@@ -4,42 +4,55 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
+import Teams from '../database/models/teamsModel';
 
-import { Response } from 'superagent';
+import { Response, Request } from 'superagent';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+describe('Test de integração', () => {
+    afterEach(() => {
+        sinon.restore();
+    });
 
-  // let chaiHttpResponse: Response;
+    it('GET /teams', async () => {
+        sinon.stub(Teams, 'findAll').returns([
+            {
+                id: 1,
+                teamName: 'Team 1',
+            },
+            {
+                id: 2,
+                teamName: 'Team 2',
+            },
+        ] as any);
+        const response: Response = await chai.request(app).get('/teams');
+        expect(response.status).to.be.equal(200);
+        expect(response.body).to.be.an('array');
+        expect(response.body).to.have.length(2);
+        expect(response.body[0]).to.have.property('id').to.be.equal(1);
+        expect(response.body[0]).to.have.property('teamName').to.be.equal('Team 1');
+    });
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+    it('GET /teams/:id', async () => {
+        sinon.stub(Teams, 'findByPk').returns({
+            id: 1,
+            teamName: 'Team 1',
+        } as any);
+        const response: Response = await chai.request(app).get('/teams/1');
+        expect(response.status).to.be.equal(200);
+        expect(response.body).to.be.an('object');
+        expect(response.body).to.have.property('id').to.be.equal(1);
+        expect(response.body).to.have.property('teamName').to.be.equal('Team 1');
+    });
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
-
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
-
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
-  });
+    it('GET /teams/:id - Not Found', async () => {
+        sinon.stub(Teams, 'findByPk').returns(Promise.resolve(null));
+        const response: Response = await chai.request(app).get('/teams/1');
+        expect(response.status).to.be.equal(404);
+        expect(response.body).to.be.an('object');
+        expect(response.body).to.have.property('message').to.be.equal('Team not found');
+    });
 });
