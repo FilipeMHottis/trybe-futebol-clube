@@ -2,9 +2,18 @@ import { HTTP_STATUS } from '../utils/httpStatus';
 
 type Status = keyof typeof HTTP_STATUS;
 
-interface ServiceResponse<T> {
+interface ServiceResponseSucessfull<T> {
   status: Status;
   data: T;
 }
+
+interface ServiceResponseError {
+  status: Status;
+  data: {
+    message: string;
+  };
+}
+
+type ServiceResponse<T> = ServiceResponseSucessfull<T> | ServiceResponseError;
 
 export default ServiceResponse;

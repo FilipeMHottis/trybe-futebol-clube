@@ -8,4 +8,9 @@ router.get(
   (req: Request, res: Response) => new TemasController().getAllTeams(req, res),
 );
 
+router.get(
+  '/:id',
+  (req: Request, res: Response) => new TemasController().getById(req, res),
+);
+
 export default router;

@@ -9,6 +9,12 @@ class TeamsController implements TeamsController {
     const { status, data } = await this.service.getAllTeams();
     return res.status(mapStatus(status)).json(data);
   }
+
+  public async getById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const { status, data } = await this.service.getById(Number(id));
+    return res.status(mapStatus(status)).json(data);
+  }
 }
 
 export default TeamsController;

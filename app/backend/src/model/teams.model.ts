@@ -2,7 +2,8 @@ import ITeams from '../Interfaces/db/ITeams';
 import Teams from '../database/models/teamsModel';
 
 interface TeamModel {
-  getAllTeams(): Promise<ITeams[]>
+  getAllTeams(): Promise<ITeams[]>;
+  getById(id: number): Promise<ITeams | null>;
 }
 
 class TeamsModel implements TeamModel {
@@ -11,6 +12,11 @@ class TeamsModel implements TeamModel {
   public async getAllTeams(): Promise<ITeams[]> {
     const teams = await this.db.findAll();
     return teams;
+  }
+
+  public async getById(id: number): Promise<ITeams | null> {
+    const team = await this.db.findByPk(id);
+    return team;
   }
 }
 
