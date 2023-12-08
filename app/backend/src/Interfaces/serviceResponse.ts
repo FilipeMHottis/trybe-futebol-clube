@@ -16,4 +16,5 @@ interface ServiceResponseError {
 
 type ServiceResponse<T> = ServiceResponseSucessfull<T> | ServiceResponseError;
 
+export { ServiceResponseSucessfull, ServiceResponseError };
 export default ServiceResponse;
