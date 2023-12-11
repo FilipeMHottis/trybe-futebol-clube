@@ -16,7 +16,7 @@ class UsersService implements UserService {
     if (!user) {
       return {
         status: 'unauthorized',
-        data: { message: 'email or password incorrec' },
+        data: { message: 'Invalid email or password' },
       };
     }
 
@@ -25,11 +25,13 @@ class UsersService implements UserService {
     if (!passwordMatch) {
       return {
         status: 'unauthorized',
-        data: { message: 'email or password incorrect' },
+        data: { message: 'Invalid email or password' },
       };
     }
 
-    const token = jwt.generateToken({ id: user.id });
+    const token = jwt.generateToken(
+      { id: user.id, email: user.email, username: user.username, role: user.role },
+    );
     return { status: 'ok', data: { token } };
   }
 }
