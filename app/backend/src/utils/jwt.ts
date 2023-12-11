@@ -1,4 +1,5 @@
-import { verify, sign, JwtPayload } from 'jsonwebtoken';
+import { verify, sign } from 'jsonwebtoken';
+import { User } from '../Interfaces/db/IUser';
 
 class Jwt {
   private secret = process.env.JWT_SECRET || 'secret';
@@ -8,8 +9,8 @@ class Jwt {
     return token;
   };
 
-  public verifyToken = (token: string): string | JwtPayload => {
-    const payload = verify(token, this.secret);
+  public verifyToken = (token: string) => {
+    const payload = verify(token, this.secret) as User;
     return payload;
   };
 }

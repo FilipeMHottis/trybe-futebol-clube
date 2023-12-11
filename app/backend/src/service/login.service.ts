@@ -3,11 +3,12 @@ import bcrypt from '../utils/bcrypt';
 import UsersModel from '../model/users.model';
 import ServiceResponse from '../Interfaces/serviceResponse';
 
-interface UserService {
+interface ILoginService {
   login(email: string, password: string): Promise<ServiceResponse<object>>;
+  getRole(id: number): Promise<ServiceResponse<object>>;
 }
 
-class UsersService implements UserService {
+class LoginService implements ILoginService {
   private db = new UsersModel();
 
   public async login(email: string, password: string): Promise<ServiceResponse<object>> {
@@ -30,10 +31,23 @@ class UsersService implements UserService {
     }
 
     const token = jwt.generateToken(
-      { id: user.id, email: user.email, username: user.username, role: user.role },
+      { id: user.id, email: user.email, username: user.username },
     );
     return { status: 'ok', data: { token } };
   }
+
+  public async getRole(id:number): Promise<ServiceResponse<object>> {
+    const user = await this.db.getById(Number(id));
+
+    if (!user) {
+      return {
+        status: 'unauthorized',
+        data: { message: 'Invalid id!' },
+      };
+    }
+
+    return { status: 'ok', data: { role: user.role } };
+  }
 }
 
-export default UsersService;
+export default LoginService;

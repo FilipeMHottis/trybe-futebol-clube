@@ -6,4 +6,11 @@ interface IUser {
   password: string;
 }
 
+type User = {
+  id?: number;
+  username: string;
+  email: string;
+};
+
+export type { User };
 export default IUser;
