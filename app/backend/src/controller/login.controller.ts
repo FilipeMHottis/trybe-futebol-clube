@@ -3,6 +3,7 @@ import mapStatus from '../utils/httpStatus';
 import UsersService from '../service/login.service';
 import ServiceResponse from '../Interfaces/serviceResponse';
 import jwt from '../utils/jwt';
+import { User } from '../Interfaces/db/IUser';
 
 interface Controller {
   login(req: Request, res: Response): Promise<Response>;
@@ -20,7 +21,7 @@ class LoginController implements Controller {
 
   public async getRole(req: Request, res: Response): Promise<Response> {
     const { authorization } = req.headers;
-    const { id } = jwt.verifyToken(authorization as any);
+    const { id } = jwt.verifyToken(authorization as string) as User;
     const { status, data }: ServiceResponse<object> = await this.service.getRole(id as number);
     return res.status(mapStatus(status)).json(data);
   }
