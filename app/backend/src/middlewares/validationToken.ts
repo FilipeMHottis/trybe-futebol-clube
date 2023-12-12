@@ -1,28 +1,28 @@
-import { Request, Response, NextFunction } from 'express';
-import mapStatus from '../utils/httpStatus';
-import { ServiceResponseError } from '../Interfaces/serviceResponse';
+import { Response, NextFunction } from 'express';
 import Jwt from '../utils/jwt';
+import { RequestWithUser } from '../Interfaces/db/IUser';
 
 class ValidationToken {
-  validate = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
+  validate = (req: RequestWithUser, res: Response, next: NextFunction) => {
+    const headerParms = req.headers.authorization?.split(' ');
+    if (!headerParms) {
+      return res.status(401).json({ message: 'Token not found' });
+    }
+    if (headerParms[0] !== 'Bearer') {
+      return res.status(401).json({ message: 'Token must be a valid token' });
+    }
 
+    const token = headerParms[1];
     if (!token) {
-      const { status, data }: ServiceResponseError = {
-        status: 'unauthorized',
-        data: { message: 'Token not found' },
-      };
-      return res.status(mapStatus(status)).json(data);
+      return res.status(401).json({ message: 'Token not found' });
     }
 
     try {
-      Jwt.verifyToken(token);
+      const decoded = Jwt.verifyToken(token);
+      req.user = decoded;
       next();
     } catch (error) {
-      const { status, data }: ServiceResponseError = {
-        status: 'unauthorized', data: { message: 'Token must be a valid token' },
-      };
-      return res.status(mapStatus(status)).json(data);
+      return res.status(401).json({ message: 'Token must be provided' });
     }
   };
 }

@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 interface IUser {
   id?: number;
   username: string;
@@ -12,5 +14,9 @@ type User = {
   email: string;
 };
 
-export type { User };
+interface RequestWithUser extends Request {
+  user: User;
+}
+
+export type { User, RequestWithUser };
 export default IUser;

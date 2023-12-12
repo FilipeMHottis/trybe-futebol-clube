@@ -1,4 +1,5 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
+import { RequestWithUser } from '../Interfaces/db/IUser';
 import LoginValidationMiddleware from '../middlewares/loginValidation.Middleware';
 import ValidationToken from '../middlewares/validationToken';
 import LoginController from '../controller/login.controller';
@@ -6,7 +7,6 @@ import LoginController from '../controller/login.controller';
 const router = Router();
 
 const loginValidationMiddleware = new LoginValidationMiddleware();
-const validationToken = new ValidationToken();
 
 router.post(
   '/',
@@ -16,8 +16,14 @@ router.post(
 
 router.get(
   '/role',
-  validationToken.validate,
-  (req: Request, res: Response) => new LoginController().getRole(req, res),
+  (req: Request, res: Response, next: NextFunction) => {
+    const reqWithUser = req as RequestWithUser;
+    new ValidationToken().validate(reqWithUser, res, next);
+  },
+  (req: Request, res: Response) => {
+    const reqWithUser = req as RequestWithUser;
+    new LoginController().getRole(reqWithUser, res);
+  },
 );
 
 export default router;
