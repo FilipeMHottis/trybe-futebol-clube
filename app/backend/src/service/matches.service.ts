@@ -4,7 +4,7 @@ import MatchesModel from '../model/matches.model';
 
 interface Service {
   getAllMatches(): Promise<ServiceResponse<IMatches[]>>;
-  getAllMatchesInProgress(): Promise<ServiceResponse<IMatches[]>>;
+  getAllMatchesInProgress(inProgress: boolean): Promise<ServiceResponse<IMatches[]>>;
 }
 
 class MatchesService implements Service {
@@ -18,8 +18,11 @@ class MatchesService implements Service {
     return { status: 'ok', data: matches };
   }
 
-  public async getAllMatchesInProgress(): Promise<ServiceResponse<IMatches[]>> {
-    const matches = await this.model.getMatchesInProgress();
+  public async getAllMatchesInProgress(inProgress: boolean): Promise<ServiceResponse<IMatches[]>> {
+    let matches: IMatches[] = [];
+
+    if (inProgress) matches = await this.model.getMatchesInProgress();
+    else matches = await this.model.getMatchesFinished();
 
     if (!matches) return { status: 'notFound', data: { message: 'No matches found' } };
 

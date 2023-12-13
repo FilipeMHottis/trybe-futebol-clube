@@ -16,7 +16,8 @@ class MatchesController implements Controller {
   }
 
   public async getAllMatchesInProgress(req: Request, res: Response): Promise<Response> {
-    const { status, data } = await this.service.getAllMatchesInProgress();
+    const onProgress = req.query.inProgress as 'true' | 'false';
+    const { status, data } = await this.service.getAllMatchesInProgress(onProgress === 'true');
     return res.status(mapStatus(status)).json(data);
   }
 }
