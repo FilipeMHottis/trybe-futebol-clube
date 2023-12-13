@@ -43,6 +43,7 @@ Matches.init({
   awayTeamGoals: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'away_team_goals',
   },
   inProgress: {
     type: DataTypes.BOOLEAN,
