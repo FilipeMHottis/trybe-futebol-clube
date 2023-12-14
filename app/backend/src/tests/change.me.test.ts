@@ -8,15 +8,22 @@ import jwt from '../utils/jwt';
 import bcrypt from '../utils/bcrypt';
 import Teams from '../database/models/teamsModel';
 import Users from '../database/models/usersModel';
+import Matches from '../database/models/matchesModel';
 
 import { Response, Request } from 'superagent';
 import { mockUser, mockUserComplete, loginUser } from './mock/user.mock';
+import { allMatches, newMatch, oneMatch, updatedMatch } from './mock/matches.mock';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
 describe('Test de integração', () => {
+    beforeEach(() => {
+        sinon.stub(jwt, 'verifyToken').returns(mockUser);
+        sinon.stub(jwt, 'generateToken').returns('token');
+    });
+
     afterEach(() => {
         sinon.restore();
     });
@@ -62,7 +69,6 @@ describe('Test de integração', () => {
 
     it('POST /login', async () => {
         sinon.stub(Users, 'findOne').returns(Promise.resolve(mockUserComplete) as any);
-        sinon.stub(jwt, 'generateToken').returns('token');
         sinon.stub(bcrypt, 'compare').returns(Promise.resolve(true));
 
         const { status, body } = await chai.request(app).post('/login').send(loginUser);
@@ -83,8 +89,6 @@ describe('Test de integração', () => {
 
     it('GET /login/role', async () => {
         sinon.stub(Users, 'findOne').returns(Promise.resolve(mockUserComplete) as any);
-        sinon.stub(jwt, 'verifyToken').returns(mockUser);
-
         const { status, body } = await chai.request(app)
             .get('/login/role')
             .set('authorization', 'Bearer token');
@@ -92,5 +96,100 @@ describe('Test de integração', () => {
         expect(status).to.be.equal(200);
         expect(body).to.be.an('object');
         expect(body).to.have.property('role').to.be.equal('admin');
+    });
+
+    it('GET /matches', async () => {
+        sinon.stub(Matches, 'findAll').returns(allMatches as any);
+        const { status, body } = await chai.request(app).get('/matches');
+
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('array');
+        expect(body).to.have.length(2);
+        expect(body[0]).to.have.property('id').to.be.equal(1);
+        expect(body[0]).to.have.property('homeTeamId').to.be.equal(1);
+        expect(body[0]).to.have.property('awayTeamId').to.be.equal(2);
+        expect(body[0]).to.have.property('homeTeamGoals').to.be.equal(1);
+        expect(body[0]).to.have.property('awayTeamGoals').to.be.equal(0);
+        expect(body[0]).to.have.property('inProgress').to.be.equal(false);
+    });
+
+    it('GET /matches/:id', async () => {
+        sinon.stub(Matches, 'findOne').returns(oneMatch as any);
+        const { status, body } = await chai.request(app).get('/matches/1');
+
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('object');
+        expect(body).to.have.property('id').to.be.equal(1);
+        expect(body).to.have.property('homeTeamId').to.be.equal(1);
+        expect(body).to.have.property('awayTeamId').to.be.equal(2);
+        expect(body).to.have.property('homeTeamGoals').to.be.equal(1);
+        expect(body).to.have.property('awayTeamGoals').to.be.equal(0);
+        expect(body).to.have.property('inProgress').to.be.equal(false);
+    });
+
+    it('GET /matches?inProgress=true with params', async () => {
+        sinon.stub(Matches, 'findAll').returns(allMatches as any);
+        const { status, body } = await chai.request(app).get('/matches?inProgress=true');
+
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('array');
+        expect(body).to.have.length(2);
+        expect(body[0]).to.have.property('id').to.be.equal(1);
+        expect(body[0]).to.have.property('homeTeamId').to.be.equal(1);
+        expect(body[0]).to.have.property('awayTeamId').to.be.equal(2);
+        expect(body[0]).to.have.property('homeTeamGoals').to.be.equal(1);
+        expect(body[0]).to.have.property('awayTeamGoals').to.be.equal(0);
+        expect(body[0]).to.have.property('inProgress').to.be.equal(false);
+    });
+
+    it('PATH /matches/1/finish', async () => {
+        sinon.stub(Matches, 'findOne').returns(updatedMatch as any);
+
+        const { status, body } = await chai
+            .request(app)
+            .patch('/matches/1/finish')
+            .set('authorization', 'Bearer token');
+        
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('object');
+        expect(body).to.have.property('message').to.be.equal('March is now over');
+    });
+
+    it('PATH /matches/1', async () => {
+        sinon.stub(Matches, 'findOne').returns(updatedMatch as any);
+
+        const { status, body } = await chai
+            .request(app)
+            .patch('/matches/1')
+            .set('authorization', 'Bearer token')
+            .send({ homeTeamGoals: 1, awayTeamGoals: 0 });
+        
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('object');
+        expect(body).to.have.property('id').to.be.equal(1);
+        expect(body).to.have.property('homeTeamId').to.be.equal(1);
+        expect(body).to.have.property('awayTeamId').to.be.equal(2);
+        expect(body).to.have.property('homeTeamGoals').to.be.equal(1);
+        expect(body).to.have.property('awayTeamGoals').to.be.equal(0);
+        expect(body).to.have.property('inProgress').to.be.equal(false);
+    });
+
+    it('POST /matches', async () => {
+        sinon.stub(Matches, 'create').returns(oneMatch as any);
+
+        const { status, body } = await chai
+            .request(app)
+            .post('/matches')
+            .set('authorization', 'Bearer token')
+            .send(newMatch);
+
+        expect(status).to.be.equal(201);
+        expect(body).to.be.an('object');
+        expect(body).to.have.property('id').to.be.equal(1);
+        expect(body).to.have.property('homeTeamId').to.be.equal(1);
+        expect(body).to.have.property('awayTeamId').to.be.equal(2);
+        expect(body).to.have.property('homeTeamGoals').to.be.equal(1);
+        expect(body).to.have.property('awayTeamGoals').to.be.equal(0);
+        expect(body).to.have.property('inProgress').to.be.equal(false);
     });
 });

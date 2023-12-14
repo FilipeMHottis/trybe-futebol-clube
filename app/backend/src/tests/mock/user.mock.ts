@@ -1,4 +1,4 @@
-import Iuser, { User } from '../../Interfaces/db/IUser';
+import Iuser, { User } from '../../interfaces/db/IUser';
 
 export const mockUserComplete: Iuser = {
     id: 1,

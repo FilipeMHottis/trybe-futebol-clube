@@ -1,5 +1,5 @@
-import ServiceResponse from '../Interfaces/serviceResponse';
-import IMatches, { NewMatch } from '../Interfaces/db/IMatches';
+import ServiceResponse from '../interfaces/serviceResponse';
+import IMatches, { NewMatch } from '../interfaces/db/IMatches';
 import MatchesModel from '../model/matches.model';
 
 const mensagens = {

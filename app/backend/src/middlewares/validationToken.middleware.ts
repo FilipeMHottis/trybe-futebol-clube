@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import Jwt from '../utils/jwt';
-import { RequestWithUser } from '../Interfaces/db/IUser';
+import { RequestWithUser } from '../interfaces/db/IUser';
 
 class ValidationToken {
   validate = (req: RequestWithUser, res: Response, next: NextFunction) => {

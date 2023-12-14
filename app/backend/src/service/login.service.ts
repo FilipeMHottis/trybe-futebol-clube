@@ -1,7 +1,7 @@
 import jwt from '../utils/jwt';
 import bcrypt from '../utils/bcrypt';
 import UsersModel from '../model/users.model';
-import ServiceResponse from '../Interfaces/serviceResponse';
+import ServiceResponse from '../interfaces/serviceResponse';
 
 interface ILoginService {
   login(email: string, password: string): Promise<ServiceResponse<object>>;

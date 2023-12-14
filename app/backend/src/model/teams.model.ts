@@ -1,4 +1,4 @@
-import ITeams from '../Interfaces/db/ITeams';
+import ITeams from '../interfaces/db/ITeams';
 import Teams from '../database/models/teamsModel';
 
 interface TeamModel {

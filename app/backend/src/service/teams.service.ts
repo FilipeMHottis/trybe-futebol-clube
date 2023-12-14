@@ -1,5 +1,5 @@
-import ServiceResponse from '../Interfaces/serviceResponse';
-import ITeams from '../Interfaces/db/ITeams';
+import ServiceResponse from '../interfaces/serviceResponse';
+import ITeams from '../interfaces/db/ITeams';
 import TeamsModel from '../model/teams.model';
 
 interface TeamService {

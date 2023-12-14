@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { RequestWithUser } from '../Interfaces/db/IUser';
+import { RequestWithUser } from '../interfaces/db/IUser';
 import mapStatus from '../utils/httpStatus';
 import UsersService from '../service/login.service';
-import ServiceResponse from '../Interfaces/serviceResponse';
+import ServiceResponse from '../interfaces/serviceResponse';
 
 interface Controller {
   login(req: Request, res: Response): Promise<Response>;

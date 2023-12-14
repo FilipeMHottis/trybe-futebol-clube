@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mapStatus from '../utils/httpStatus';
 import MatchesService from '../service/matches.service';
-import { NewMatch } from '../Interfaces/db/IMatches';
+import { NewMatch } from '../interfaces/db/IMatches';
 
 interface Controller {
   getAllMatches(req: Request, res: Response): Promise<Response>;

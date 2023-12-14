@@ -1,5 +1,5 @@
 import { verify, sign } from 'jsonwebtoken';
-import { User } from '../Interfaces/db/IUser';
+import { User } from '../interfaces/db/IUser';
 
 class Jwt {
   private secret = process.env.JWT_SECRET || 'secret';

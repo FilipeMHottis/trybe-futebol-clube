@@ -1,7 +1,7 @@
 import Joi = require('joi');
 import { Request, Response, NextFunction } from 'express';
 import mapStatus from '../utils/httpStatus';
-import { ServiceResponseError } from '../Interfaces/serviceResponse';
+import { ServiceResponseError } from '../interfaces/serviceResponse';
 
 class MatcheValidationMiddleware {
   private matcheSchema = Joi.object().keys({

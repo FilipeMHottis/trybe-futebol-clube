@@ -1,6 +1,6 @@
 import Teams from '../database/models/teamsModel';
 import Matches from '../database/models/matchesModel';
-import IMatches, { NewMatch } from '../Interfaces/db/IMatches';
+import IMatches, { NewMatch } from '../interfaces/db/IMatches';
 
 interface Model {
   getAllMatches(): Promise<IMatches[] | null>;

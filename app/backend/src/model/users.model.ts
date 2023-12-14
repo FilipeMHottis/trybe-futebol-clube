@@ -1,4 +1,4 @@
-import IUser from '../Interfaces/db/IUser';
+import IUser from '../interfaces/db/IUser';
 import Users from '../database/models/usersModel';
 
 interface UserModel {
