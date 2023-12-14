@@ -6,7 +6,7 @@ interface Model {
   getAllMatches(): Promise<IMatches[] | null>;
   getMatchesInProgress(): Promise<IMatches[] | null>;
   getMatchesFinished(): Promise<IMatches[] | null>;
-  getMatchesById(id: number): Promise<IMatches | null>;
+  getMatcheById(id: number): Promise<IMatches | null>;
   updateProgress(id: number): Promise<'Finished' | 'March is now over' | null>;
   updateScore(id: number, homeScore: number, awayScore: number): Promise<IMatches | null>;
   postNewMatch(newMatch: NewMatch): Promise<IMatches | null>;
@@ -74,7 +74,7 @@ class MatchesModel implements Model {
     return matches;
   }
 
-  public async getMatchesById(id: number): Promise<IMatches | null> {
+  public async getMatcheById(id: number): Promise<IMatches | null> {
     const matches = await this.db.findOne({
       where: { id },
       include: [

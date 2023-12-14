@@ -38,7 +38,7 @@ class MatchesService implements Service {
   }
 
   public async getMatcheById(id: number): Promise<ServiceResponse<IMatches>> {
-    const matche = await this.model.getMatchesById(id);
+    const matche = await this.model.getMatcheById(id);
 
     if (!matche) return { status: 'notFound', data: { message: mensagens.notFound } };
 
@@ -66,8 +66,8 @@ class MatchesService implements Service {
   }
 
   public async postNewMatch(newMatch: NewMatch): Promise<ServiceResponse<IMatches>> {
-    const team1 = await this.model.getMatchesById(newMatch.homeTeamId);
-    const team2 = await this.model.getMatchesById(newMatch.awayTeamId);
+    const team1 = await this.model.getMatcheById(newMatch.homeTeamId);
+    const team2 = await this.model.getMatcheById(newMatch.awayTeamId);
     if (!team1 || !team2) {
       return { status: 'notFound', data: { message: 'There is no team with such id!' } };
     }
