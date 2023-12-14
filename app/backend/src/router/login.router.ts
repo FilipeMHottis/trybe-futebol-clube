@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { RequestWithUser } from '../Interfaces/db/IUser';
-import LoginValidationMiddleware from '../middlewares/loginValidation.Middleware';
-import ValidationToken from '../middlewares/validationToken';
+import LoginValidationMiddleware from '../middlewares/loginValidation.middleware';
+import ValidationToken from '../middlewares/validationToken.middleware';
 import LoginController from '../controller/login.controller';
 
 const router = Router();

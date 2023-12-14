@@ -6,6 +6,7 @@ const HTTP_STATUS = {
   forbidden: 403,
   notFound: 404,
   conflict: 409,
+  unprocessableEntity: 422,
 };
 
 const mapStatus = (statusCode: keyof typeof HTTP_STATUS) => HTTP_STATUS[statusCode];
