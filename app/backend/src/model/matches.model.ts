@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Teams from '../database/models/teamsModel';
 import Matches from '../database/models/matchesModel';
 import IMatches, { NewMatch } from '../interfaces/db/IMatches';
@@ -7,6 +8,9 @@ interface Model {
   getMatchesInProgress(): Promise<IMatches[] | null>;
   getMatchesFinished(): Promise<IMatches[] | null>;
   getMatcheById(id: number): Promise<IMatches | null>;
+  getAllMatchesByTeamId(id: number): Promise<IMatches[] | null>;
+  getAllMatchesByTeamIdHome(id: number): Promise<IMatches[] | null>;
+  getAllMatchesByTeamIdAway(id: number): Promise<IMatches[] | null>;
   updateProgress(id: number): Promise<'Finished' | 'March is now over' | null>;
   updateScore(id: number, homeScore: number, awayScore: number): Promise<IMatches | null>;
   postNewMatch(newMatch: NewMatch): Promise<IMatches | null>;
@@ -131,6 +135,68 @@ class MatchesModel implements Model {
     });
 
     return match;
+  }
+
+  public async getAllMatchesByTeamId(id: number): Promise<IMatches[] | null> {
+    const matches = await this.db.findAll({
+      where: {
+        [Op.or]: [{ homeTeamId: id }, { awayTeamId: id }], inProgress: false,
+      },
+      include: [
+        {
+          model: Teams,
+          as: 'homeTeam',
+          attributes: ['teamName'],
+        },
+        {
+          model: Teams,
+          as: 'awayTeam',
+          attributes: ['teamName'],
+        },
+      ],
+    });
+
+    return matches;
+  }
+
+  public async getAllMatchesByTeamIdHome(id: number): Promise<IMatches[] | null> {
+    const matches = await this.db.findAll({
+      where: { homeTeamId: id, inProgress: false },
+      include: [
+        {
+          model: Teams,
+          as: 'homeTeam',
+          attributes: ['teamName'],
+        },
+        {
+          model: Teams,
+          as: 'awayTeam',
+          attributes: ['teamName'],
+        },
+      ],
+    });
+
+    return matches;
+  }
+
+  public async getAllMatchesByTeamIdAway(id: number): Promise<IMatches[] | null> {
+    const matches = await this.db.findAll({
+      where: { awayTeamId: id, inProgress: false },
+      include: [
+        {
+          model: Teams,
+          as: 'homeTeam',
+          attributes: ['teamName'],
+        },
+        {
+          model: Teams,
+          as: 'awayTeam',
+          attributes: ['teamName'],
+        },
+      ],
+    });
+
+    return matches;
   }
 }
 
