@@ -9,10 +9,13 @@ import bcrypt from '../utils/bcrypt';
 import Teams from '../database/models/teamsModel';
 import Users from '../database/models/usersModel';
 import Matches from '../database/models/matchesModel';
+import LeaderboardModel from '../model/leaderboard.model';
 
 import { Response, Request } from 'superagent';
 import { mockUser, mockUserComplete, loginUser } from './mock/user.mock';
 import { allMatches, newMatch, oneMatch, updatedMatch } from './mock/matches.mock';
+import { leaderboardsMock, leaderboardsAwayMock, leaderboardsHomeMock } from './mock/leadboard.mock';
+import { teamsMock } from './mock/teams.mock';
 
 chai.use(chaiHttp);
 
@@ -191,5 +194,40 @@ describe('Test de integração', () => {
         expect(body).to.have.property('homeTeamGoals').to.be.equal(1);
         expect(body).to.have.property('awayTeamGoals').to.be.equal(0);
         expect(body).to.have.property('inProgress').to.be.equal(false);
+    });
+
+    it('GET /leaderboard', async () => {
+        it('GET /leaderboard', async () => {
+            sinon.stub(LeaderboardModel.prototype, 'getAllLeaderboards').returns(leaderboardsMock as any);
+          
+            const { status, body } = await chai.request(app).get('/leaderboard');
+          
+            expect(status).to.be.equal(200);
+            expect(body).to.be.an('array');
+            expect(body).to.have.length(leaderboardsMock.length);
+            expect(body).to.deep.equal(leaderboardsMock);
+          });
+    });
+
+    it('GET /leaderboard/home', async () => {
+        sinon.stub(LeaderboardModel.prototype, 'getLeaderboard').returns(leaderboardsHomeMock as any);
+
+        const { status, body } = await chai.request(app).get('/leaderboard/home');
+
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('array');
+        expect(body).to.have.length(leaderboardsHomeMock.length);
+        expect(body).to.deep.equal(leaderboardsHomeMock);
+    });
+
+    it('GET /leaderboard/away', async () => {
+        sinon.stub(LeaderboardModel.prototype, 'getLeaderboard').returns(leaderboardsAwayMock as any);
+
+        const { status, body } = await chai.request(app).get('/leaderboard/away');
+
+        expect(status).to.be.equal(200);
+        expect(body).to.be.an('array');
+        expect(body).to.have.length(leaderboardsAwayMock.length);
+        expect(body).to.deep.equal(leaderboardsAwayMock);
     });
 });
