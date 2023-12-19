@@ -88,21 +88,19 @@ class LeaderboardModel implements Model {
     const teams = await this.teams.getAllTeams();
 
     if (!matches || !teams) throw new Error('No matches or teams found');
-    const matchesNoRepeat = matches.filter((match, index, self) => {
-      const matchIndex = self.findIndex((m) => m.id === match.id);
-      return matchIndex === index;
-    });
 
     return teams.map((team) => {
-      const homeMatches = matchesNoRepeat.filter((match) => match.homeTeamId === team.id);
-      const awayMatches = matchesNoRepeat.filter((match) => match.awayTeamId === team.id);
-      const homePerformances = new Performace(homeMatches as IMatchesWithTeams[]);
-      const awayPerformances = new Performace(awayMatches as IMatchesWithTeams[]);
-      return LeaderboardModel.createAllTeamStats(
-        homePerformances,
-        awayPerformances,
-        team.teamName,
-      );
+      const homeMatches = matches.filter((match) => match.homeTeamId === team.id
+        && !match.inProgress);
+      const awayMatches = matches.filter((match) => match.awayTeamId === team.id
+        && !match.inProgress);
+
+      const homePerformance = new Performace(homeMatches as IMatchesWithTeams[]);
+      const awayPerformance = new Performace(awayMatches as IMatchesWithTeams[]);
+
+      const totalPerformance = LeaderboardModel
+        .createAllTeamStats(homePerformance, awayPerformance, team.teamName);
+      return totalPerformance;
     }).sort(LeaderboardModel.soartTeams);
   }
 }
