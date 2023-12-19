@@ -31,7 +31,7 @@ class Performace implements IPerformance {
     return this.matches.filter((match) =>
       (home
         ? match.homeTeamGoals < match.awayTeamGoals
-        : match.awayTeamGoals > match.homeTeamGoals
+        : match.awayTeamGoals < match.homeTeamGoals
       )).length;
   }
 

@@ -53,8 +53,9 @@ class LeaderboardModel implements Model {
     return teams.map((team) => {
       const finishedMatches = matchesNoRepeat
         .filter((match) => (home
-          ? match.homeTeamId === team.id : match.awayTeamId === team.id)
-            && match.inProgress === false);
+          ? match.homeTeamId === team.id
+          : match.awayTeamId === team.id)
+          && match.inProgress === false);
       const performances = new Performace(finishedMatches as IMatchesWithTeams[]);
       return LeaderboardModel.createTeamStats(team, performances, home);
     }).sort(LeaderboardModel.soartTeams);
