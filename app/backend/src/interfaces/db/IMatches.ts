@@ -15,5 +15,14 @@ interface NewMatch {
   awayTeamGoals: number;
 }
 
-export { NewMatch };
+interface IMatchesWithTeams extends IMatches {
+  homeTeam: {
+    teamName: string;
+  };
+  awayTeam: {
+    teamName: string;
+  };
+}
+
+export { NewMatch, IMatchesWithTeams };
 export default IMatches;

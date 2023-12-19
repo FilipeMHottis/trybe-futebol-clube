@@ -8,7 +8,7 @@ interface ILeaderboards {
   goalsFavor: number;
   goalsOwn: number;
   goalsBalance: number;
-  effiviency: number;
+  efficiency: number;
 }
 
 export default ILeaderboards;
