@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { RequestWithUser } from '../interfaces/db/IUser';
+import RequestWithUser from '../interfaces/requestWithUser';
 import ValidationToken from '../middlewares/validationToken.middleware';
 import MatchesController from '../controller/matches.controller';
 import MatcheValidationMiddleware from '../middlewares/matcheValidation';
