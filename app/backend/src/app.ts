@@ -1,4 +1,6 @@
 import * as express from 'express';
+import * as swaggerUI from 'swagger-ui-express';
+import * as swaggerJson from './swagger.json';
 import 'express-async-errors';
 
 import errorMiddleware from './middlewares/errorMiddleware';
@@ -39,6 +41,7 @@ class App {
     this.app.use('/login', LoginRouter);
     this.app.use('/matches', MatchesRouter);
     this.app.use('/leaderboard', LeaderboardRouter);
+    this.app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJson));
   }
 
   public start(PORT: string | number): void {

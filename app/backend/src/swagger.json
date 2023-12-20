@@ -1,0 +1,752 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Football Club Themed Api",
+        "description": "Trybe's Latest Backend Project",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Filipe Marques Hottis",
+            "email": "lipehottis@gmail.com"
+        }
+    },
+    "tags": [
+        {
+            "name": "Teams",
+            "description": "Everything about Teams"
+        },
+        {
+            "name": "Login",
+            "description": "Login to your account"
+        },
+        {
+            "name": "Matches",
+            "description": "Everything about Matches"
+        },
+        {
+            "name": "Leaderboard",
+            "description": "Everything about Leaderboard"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "Team": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Team's id"
+                    },
+                    "team_name": {
+                        "type": "string",
+                        "description": "Team's name"
+                    }
+                }
+            },
+            "Teams": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Team"
+                }
+            },
+            "Login": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "User's token"
+                    }
+                }
+            },
+            "LoginParams": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password"
+                    }
+                }
+            },
+            "TokenUser": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "User's id",
+                        "example": 1
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "example": "admin@admin.com"
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": "Admin"
+                    }
+                }
+            },
+            "Match": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Match's id"
+                    },
+                    "homeTeamId": {
+                        "type": "integer",
+                        "description": "Home team's id"
+                    },
+                    "homeTeamGoals": {
+                        "type": "integer",
+                        "description": "Home team's goals"
+                    },
+                    "awayTeamId": {
+                        "type": "integer",
+                        "description": "Away team's id"
+                    },
+                    "awayTeamGoals": {
+                        "type": "integer",
+                        "description": "Away team's goals"
+                    },
+                    "inProgress": {
+                        "type": "boolean",
+                        "description": "Match's status"
+                    },
+                    "homeTeam": {
+                        "type": "object",
+                        "properties": {
+                            "team_name": {
+                                "type": "string",
+                                "description": "Team's name"
+                            }
+                        }
+                    },
+                    "awayTeam": {
+                        "type": "object",
+                        "properties": {
+                            "team_name": {
+                                "type": "string",
+                                "description": "Team's name"
+                            }
+                        }
+                    }
+                }
+            },
+            "Matches": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Match"
+                }
+            },
+            "Leaderboard": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Team's name"
+                    },
+                    "totalPoints": {
+                        "type": "integer",
+                        "description": "Team's total points"
+                    },
+                    "totalGames": {
+                        "type": "integer",
+                        "description": "Team's total matches"
+                    },
+                    "totalVictories": {
+                        "type": "integer",
+                        "description": "Team's total victories"
+                    },
+                    "totalDraws": {
+                        "type": "integer",
+                        "description": "Team's total draws"
+                    },
+                    "totalLosses": {
+                        "type": "integer",
+                        "description": "Team's total losses"
+                    },
+                    "goalsFavor": {
+                        "type": "integer",
+                        "description": "Team's total goals favor"
+                    },
+                    "goalsOwn": {
+                        "type": "integer",
+                        "description": "Team's total goals own"
+                    },
+                    "goalsBalance": {
+                        "type": "integer",
+                        "description": "Team's total goals balance"
+                    },
+                    "efficiency": {
+                        "type": "integer",
+                        "description": "Team's efficiency"
+                    }
+                }
+            },
+            "Leaderboards": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Leaderboard"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "JWT Token",
+                "in": "header",
+                "name": "authorization",
+                "example": "Bearer {token}"
+            }
+        }
+    },
+    "paths": {
+        "/teams": {
+            "get": {
+                "summary": "Returns a list of all teams",
+                "description": "Returns a list of all teams",
+                "tags": ["Teams"],
+                "responses": {
+                    "404": {
+                        "description": "Teams not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Teams not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Teams not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A list of teams",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Teams"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teams/{id}": {
+            "get": {
+                "summary": "Returns a team by id",
+                "description": "Returns a team by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Team's id",
+                        "required": true
+                    }
+                ],
+                "tags": ["Teams"],
+                "responses": {
+                    "404": {
+                        "description": "Team not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Team not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Team not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A team",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Team"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "Login to your account",
+                "description": "Login to your account",
+                "tags": ["Login"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginParams"
+                            },
+                            "example": {
+                                "email": "admin@admin.com",
+                                "password": "secret_admin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "User not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "User not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "User not found"
+                        }
+                    },
+                    "200": {
+                        "description": "User's token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Login"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login/role": {
+            "get": {
+                "summary": "Returns user's role",
+                "description": "Returns user's role",
+                "tags": ["Login"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Token not found or invalid"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Unauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "User not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "User not found"
+                        }
+                    },
+                    "200": {
+                        "description": "User's role",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "role": "admin"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches": {
+            "get": {
+                "summary": "Returns a list of all matches",
+                "description": "Returns a list of all matches",
+                "tags": ["Matches"],
+                "responses": {
+                    "404": {
+                        "description": "Matches not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Matches not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Matches not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A list of matches",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Matches"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new match",
+                "description": "Post a new match",
+                "tags": ["Matches"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Match"
+                            },
+                            "example": {
+                                "homeTeamId": 1,
+                                "awayTeamId": 2,
+                                "homeTeamGoals": 0,
+                                "awayTeamGoals": 0
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Token not found or invalid"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Unauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Team not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Team not found"
+                        }
+                    },
+                    "201": {
+                        "description": "Match created",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/schemas/Match"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches/{id}": {
+            "get": {
+                "summary": "Returns a match by id",
+                "description": "Returns a match by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Match's id",
+                        "required": true
+                    }
+                ],
+                "tags": ["Matches"],
+                "responses": {
+                    "404": {
+                        "description": "Match not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Match not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Match not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A match",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Match"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "path": {
+                "summary": "Update a match",
+                "description": "Update a match",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Match's id",
+                        "required": true
+                    }
+                ],
+                "tags": ["Matches"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Match"
+                            },
+                            "example": {
+                                "homeTeamGoals": 2,
+                                "awayTeamGoals": 1
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Token not found or invalid"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Unauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Match not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Match not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Match not found"
+                        }
+                    },
+                    "200": {
+                        "description": "Match updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Match updated"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches?inProgress={true || false}": {
+            "get": {
+                "summary": "Returns a list of all matches by status",
+                "description": "Returns a list of all matches by status",
+                "parameters": [
+                    {
+                        "name": "inProgress",
+                        "in": "query",
+                        "description": "Match's status",
+                        "required": true
+                    }
+                ],
+                "tags": ["Matches"],
+                "responses": {
+                    "404": {
+                        "description": "Matches not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Matches not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Matches not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A list of matches",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Matches"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/matches/{id}/finish": {
+            "patch": {
+                "summary": "Finish a match",
+                "description": "Finish a match",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Match's id",
+                        "required": true
+                    }
+                ],
+                "tags": ["Matches"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Token not found or invalid"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Unauthorized"
+                        }
+                    },
+                    "404": {
+                        "description": "Match not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Match not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Match not found"
+                        }
+                    },
+                    "200": {
+                        "description": "Match finishe | March is now over",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Match finished | March is now over"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/leaderboard": {
+            "get":{
+                "summary": "Returns a list of all teams ordered by points",
+                "description": "Returns a list of all teams ordered by points",
+                "tags": ["Leaderboard"],
+                "responses": {
+                    "404": {
+                        "description": "Teams not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Teams not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Teams not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A list of teams",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Leaderboards"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/leaderboard/{home | away}": {
+            "get": {
+                "summary": "Returns a list of all teams ordered by goals",
+                "description": "Returns a list of all teams ordered by goals",
+                "parameters": [
+                    {
+                        "name": "home | away",
+                        "in": "path",
+                        "description": "Home or Away",
+                        "required": true
+                    }
+                ],
+                "tags": ["Leaderboard"],
+                "responses": {
+                    "404": {
+                        "description": "Teams not found in database",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Teams not found"
+                                }
+                            }
+                        },
+                        "example": {
+                            "message": "Teams not found"
+                        }
+                    },
+                    "200": {
+                        "description": "A list of teams",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Leaderboards"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+        
