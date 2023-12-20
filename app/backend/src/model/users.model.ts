@@ -1,12 +1,12 @@
 import IUser from '../interfaces/db/IUser';
 import Users from '../database/models/usersModel';
 
-interface UserModel {
+interface Model {
   getUserByEmail(email: string): Promise<IUser | null>;
   getById(id: number): Promise<IUser | null>;
 }
 
-class UsersModel implements UserModel {
+class UsersModel implements Model {
   private db = Users;
 
   public async getUserByEmail(email: string): Promise<IUser | null> {

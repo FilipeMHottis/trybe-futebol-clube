@@ -1,7 +1,7 @@
 import ILeaderboards from '../interfaces/ILaaderboards';
 import ITeams from '../interfaces/db/ITeams';
 import { IMatchesWithTeams } from '../interfaces/db/IMatches';
-import Performace from './performace.model';
+import Performace from '../utils/performace.model';
 import MatchesModel from './matches.model';
 import TeamsModel from './teams.model';
 

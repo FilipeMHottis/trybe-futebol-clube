@@ -2,12 +2,12 @@ import ServiceResponse from '../interfaces/serviceResponse';
 import ITeams from '../interfaces/db/ITeams';
 import TeamsModel from '../model/teams.model';
 
-interface TeamService {
+interface Service {
   getAllTeams(): Promise<ServiceResponse<ITeams[]>>;
   getById(id: number): Promise<ServiceResponse<ITeams | null>>;
 }
 
-class TeamsService implements TeamService {
+class TeamsService implements Service {
   private model = new TeamsModel();
 
   public async getAllTeams(): Promise<ServiceResponse<ITeams[]>> {

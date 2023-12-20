@@ -1,12 +1,12 @@
 import ITeams from '../interfaces/db/ITeams';
 import Teams from '../database/models/teamsModel';
 
-interface TeamModel {
+interface Model {
   getAllTeams(): Promise<ITeams[]>;
   getById(id: number): Promise<ITeams | null>;
 }
 
-class TeamsModel implements TeamModel {
+class TeamsModel implements Model {
   private db = Teams;
 
   public async getAllTeams(): Promise<ITeams[]> {

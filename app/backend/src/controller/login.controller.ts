@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { RequestWithUser } from '../interfaces/db/IUser';
+import RequestWithUser from '../interfaces/requestWithUser';
 import mapStatus from '../utils/httpStatus';
 import UsersService from '../service/login.service';
 import ServiceResponse from '../interfaces/serviceResponse';

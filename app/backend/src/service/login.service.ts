@@ -3,12 +3,12 @@ import bcrypt from '../utils/bcrypt';
 import UsersModel from '../model/users.model';
 import ServiceResponse from '../interfaces/serviceResponse';
 
-interface ILoginService {
+interface Service {
   login(email: string, password: string): Promise<ServiceResponse<object>>;
   getRole(id: number): Promise<ServiceResponse<object>>;
 }
 
-class LoginService implements ILoginService {
+class LoginService implements Service {
   private db = new UsersModel();
 
   public async login(email: string, password: string): Promise<ServiceResponse<object>> {

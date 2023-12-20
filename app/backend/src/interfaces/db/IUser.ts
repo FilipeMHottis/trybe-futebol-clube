@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 interface IUser {
   id?: number;
   username: string;
@@ -14,9 +12,5 @@ type User = {
   email: string;
 };
 
-interface RequestWithUser extends Request {
-  user: User;
-}
-
-export type { User, RequestWithUser };
+export type { User };
 export default IUser;
