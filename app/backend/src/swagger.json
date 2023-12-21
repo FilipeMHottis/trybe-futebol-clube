@@ -1,7 +1,7 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Football Club Themed Api",
+        "title": "Futebol Club Themed Api",
         "description": "Trybe's Latest Backend Project",
         "version": "1.0.0",
         "contact": {
@@ -707,7 +707,7 @@
                 }
             }
         },
-        "/leaderboard/{home | away}": {
+        "/leaderboard/{home || away}": {
             "get": {
                 "summary": "Returns a list of all teams ordered by goals",
                 "description": "Returns a list of all teams ordered by goals",
